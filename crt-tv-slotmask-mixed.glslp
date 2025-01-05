@@ -1,0 +1,10 @@
+shaders = 2 
+shader0 = "../motionblur/shaders/mix_frames.glsl"
+filter_linear0 = "false"
+shader1 = "../crt/shaders/crt-easymode.glsl"
+filter_linear1 = false
+SHARPNESS_H = "0.800000"
+MASK_STRENGTH = "0.500000"
+MASK_DOT_WIDTH = "2.000000"
+MASK_STAGGER = "3.000000"
+SCANLINE_STRENGTH = "0.500000"

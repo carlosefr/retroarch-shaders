@@ -1,0 +1,7 @@
+shaders = 1
+shader0 = ../crt/shaders/crt-easymode.glsl
+filter_linear0 = false
+
+SHARPNESS_H = "0.800000"
+MASK_STRENGTH = "0.400000"
+SCANLINE_STRENGTH = "0.500000"
