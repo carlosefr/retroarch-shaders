@@ -8,6 +8,7 @@ This repository contains a set of custom CRT shader presets for [RetroArch](http
 * **crt-tv-monitor** &ndash; same as `crt-tv-slotmask`, but sharper;
 * **crt-tv-slotmask-mixed** &ndash; same as `crt-tv-slotmask` but approximating slower phosphor decay;
 * **crt-scanlines** &ndash; pronounced scanlines, with no discernible mask;
+* **crt-mask** &ndash; pronounced scanlines and shadow mask (slightly harsher look than `crt-scanlines`);
 * **crt-mask-horizontal** &ndash; pronounced scanlines and a bit blurry (like a worn CRT);
 * **crt-mask-vertical** &ndash; same as `crt-mask-horizontal` but for vertical (arcade) games;
 * **crt-ega-newer** &ndash; pronounced scanlines and subtle mask, mimicking EGA monitors;
@@ -58,6 +59,10 @@ Click the following images to see them at their full 1680x1050 size:
 [In the Hunt](https://www.mobygames.com/game/24351/in-the-hunt/) and [Puzzle Bobble](https://www.mobygames.com/game/80773/bust-a-move/) for the arcade running in [lr-fbneo](https://github.com/libretro/FBNeo) with the `crt-scanlines` preset:
 
 <img src="screenshots/inthunt-crt-scanlines.png" alt="crt-scanlines" width="400"/>&nbsp;&nbsp;<img src="screenshots/pbobblen-crt-scanlines.png" alt="crt-scanlines" width="400"/>
+
+The same two games, but using `crt-mask` instead:
+
+<img src="screenshots/inthunt-crt-mask.png" alt="crt-mask" width="400"/>&nbsp;&nbsp;<img src="screenshots/pbobblen-crt-mask.png" alt="crt-mask" width="400"/>
 
 [Zanac Neo](https://www.mobygames.com/game/22778/zanac-x-zanac/) for the PS1 running in [lr-pcsx-rearmed](https://github.com/libretro/pcsx_rearmed), and [Sonic the Hedgehog](https://www.mobygames.com/game/6579/sonic-the-hedgehog/) for the Mega Drive running in [lr-genesis-plus-gx](https://github.com/libretro/Genesis-Plus-GX), with the `crt-tv` preset:
 
