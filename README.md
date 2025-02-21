@@ -17,7 +17,7 @@ This repository contains a set of custom CRT shader presets for [RetroArch](http
 * **crt-vga-older** &ndash; same as `crt-vga-newer` but slightly more blurry;
 * **crt-vga-alternate** &ndash; similar to `crt-vga-newer` with added sharp-bilinear filtering.
 
-I've found that `crt-tv-slotmask` or `crt-tv` works best for consoles, but I tend to prefer `crt-scanlines` for most arcade games. I know it's less accurate, because CRTs in arcade cabinets (like any color CRT) also had shadow masks, but fits better with my subjective memories somehow.
+I've found that `crt-tv-slotmask` or `crt-tv` works best for consoles, but I tend to prefer `crt-scanlines` for most arcade games. I know it's less accurate, because CRTs in arcade cabinets (like any color CRT) also had shadow masks, but fits better with my subjective memories somehow. If you want something closer to an actual arcade CRT, try `crt-mask`.
 
 The `crt-tv-slotmask-mixed` preset is sometimes useful for demos with effects that depend on a CRT's phospor persistence to blend fast switching colors, like [Mescaline Synesthesia](https://www.pouet.net/prod.php?which=54207) for the ZX Spectrum.
 
