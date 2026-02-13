@@ -3,10 +3,24 @@
 This repository contains a set of custom CRT shader presets for [RetroArch](https://www.retroarch.com/) based on its [glsl-shaders](https://github.com/libretro/glsl-shaders). These presets are meant to look reasonable on resolutions slightly below 1080p and have good performance on weak graphics cards — I'm using them with an [ATI Mobility Radeon HD 2600](https://en.wikipedia.org/wiki/Radeon_HD_2000_series) from **2008** driving a 1680x1050 LCD screen.
 
 
+## Install
+
+Clone this repository into a subdirectory of RetroArch's shader directory, like this:
+
+```
+cd /opt/retropie/configs/all/retroarch/shaders
+git clone https://github.com/carlosefr/retroarch-shaders.git custom
+```
+
+The new presets will appear in RetroArch's `Shaders / Load Preset` menu under the `custom` folder. You can name it something other than "custom" if you prefer.
+
+
+## Presets
+
 * **crt-tv** &ndash; subtle scanlines and a Sony Trinitron-like mask (aperture grille);
 * **crt-tv-slotmask** &ndash; same as `crt-tv`, but with a slot mask instead (most non-Sony TVs);
-* **crt-tv-monitor** &ndash; same as `crt-tv-slotmask`, but sharper;
 * **crt-tv-slotmask-mixed** &ndash; same as `crt-tv-slotmask` but approximating slower phosphor decay;
+* **crt-tv-monitor** &ndash; same as `crt-tv-slotmask`, but sharper;
 * **crt-scanlines** &ndash; pronounced scanlines, with no discernible mask;
 * **crt-mask** &ndash; pronounced scanlines and shadow mask (slightly harsher look than `crt-scanlines`);
 * **crt-mask-horizontal** &ndash; pronounced scanlines and a bit blurry (like a worn CRT);
@@ -15,7 +29,10 @@ This repository contains a set of custom CRT shader presets for [RetroArch](http
 * **crt-ega-older** &ndash; same as `crt-ega-newer` but slightly more blurry;
 * **crt-vga-newer** &ndash; barely any scanlines and subtle mask;
 * **crt-vga-older** &ndash; same as `crt-vga-newer` but slightly more blurry;
-* **crt-vga-alternate** &ndash; similar to `crt-vga-newer` with added sharp-bilinear filtering.
+* **crt-vga-alternate** &ndash; similar to `crt-vga-newer` with added sharp-bilinear filtering;
+* **crt-vga-slotmask-fast** &ndash; similar VGA look, but faster (for 3dfx games using OpenGL emulation);
+* **crt-vga-trinitron-fast** &ndash; similar to `crt-vga-slotmask-fast` but with a Trinitron-like mask;
+* **crt-noise** &ndash; meant to be prepended to one of the other presets, for added texture.
 
 I've found that `crt-tv-slotmask` or `crt-tv` works best for consoles, but I tend to prefer `crt-scanlines` for most arcade games. I know it's less accurate, because CRTs in arcade cabinets (like any color CRT) also had shadow masks, but fits better with my subjective memories somehow. If you want something closer to an actual arcade CRT, try `crt-mask`.
 
@@ -38,18 +55,6 @@ You may be wondering why sharp-bilinear filtering is necessary, but consider tha
 Also, you may wonder why it's necessary to approximate a slower phosphor. Again, because the emulated system isn't driving the CRT, it may be expecting a progressive scan output when the Pi is actually doing interlaced output. With interlacing the scanlines of successive frames don't blend together because the scanlines of the next frame are drawn in the empty space between the scanlines of the previous frame.
 
 For these and other reasons, emulation on a Raspberry Pi with composite output to a CRT isn't an accurate reproduction of the orignal hardware. Though, in practice, it's often close enough.
-
-
-## Install
-
-Clone this repository into a subdirectory of RetroArch's shader directory, like this:
-
-```
-cd /opt/retropie/configs/all/retroarch/shaders
-git clone https://github.com/carlosefr/retroarch-shaders.git custom
-```
-
-The new presets will appear in RetroArch's `Shaders / Load Preset` menu under the `custom` folder. You can name it something other than "custom" if you prefer.
 
 
 ## Examples
