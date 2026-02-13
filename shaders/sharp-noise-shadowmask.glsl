@@ -1,15 +1,20 @@
 /*
- *   This program is free software; you can redistribute it and/or modify it
- *   under the terms of the GNU General Public License as published by the Free
- *   Software Foundation; either version 2 of the License, or (at your option)
- *   any later version.
+ *  CRT noise combined with a slotmask or aperture grille over antialiased
+ *  nearest-neighbor scaling. On slow GPUs this is faster than stacking the
+ *  two separate shaders (because the scaling only happens once).
  *
- *   Based on "gizmo-slotmask-crt" (https://github.com/gizmo98/gizmo-crt-shader).
+ *  This program is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License as published by the Free
+ *  Software Foundation; either version 2 of the License, or (at your option)
+ *  any later version.
+ *
+ *  Based on "gizmo-slotmask-crt" (https://github.com/gizmo98/gizmo-crt-shader).
  */
 
 
-#pragma parameter MASK_INTENSITY "Shadow Mask Intensity"       0.0 0.0 3.0 0.05
+#pragma parameter MASK_INTENSITY "Shadow Mask Intensity"       0.3 0.0 3.0 0.05
 #pragma parameter MASK_TRINITRON "Aperture Grille (Trinitron)" 0.0 0.0 1.0 1.0
+#pragma parameter NOISE_INTENSITY "Noise Intensity"            2.0 0.0 3.0 0.05
 
 
 #if defined(VERTEX)
@@ -35,15 +40,16 @@ COMPAT_VARYING COMPAT_PRECISION float vMaskScale;
 
 uniform mat4 MVPMatrix;
 uniform COMPAT_PRECISION vec2 TextureSize;
-uniform COMPAT_PRECISION vec2 InputSize;
 uniform COMPAT_PRECISION vec2 OutputSize;
 
 #ifdef PARAMETER_UNIFORM
     uniform COMPAT_PRECISION float MASK_INTENSITY;
     uniform COMPAT_PRECISION float MASK_TRINITRON;
+    uniform COMPAT_PRECISION float NOISE_INTENSITY;
 #else
     #define MASK_INTENSITY 0.0
     #define MASK_TRINITRON 0.0
+    #define NOISE_INTENSITY 0.0
 #endif
 
 
@@ -78,6 +84,7 @@ void main() {  // VERTEX
     #define COMPAT_PRECISION
 #endif
 
+uniform COMPAT_PRECISION int FrameCount;
 uniform COMPAT_PRECISION vec2 OutputSize;
 uniform COMPAT_PRECISION vec2 TextureSize;
 uniform sampler2D Texture;
@@ -87,12 +94,22 @@ COMPAT_VARYING COMPAT_PRECISION float vMaskScale;  // pre-calculated (vertex)
 #ifdef PARAMETER_UNIFORM
     uniform COMPAT_PRECISION float MASK_INTENSITY;
     uniform COMPAT_PRECISION float MASK_TRINITRON;
+    uniform COMPAT_PRECISION float NOISE_INTENSITY;
 #endif
 
 
 vec2 scale_antialias(in vec2 uv) {
     uv *= TextureSize;
     return (floor(uv) + clamp(fract(uv) / fwidth(uv), 0.0, 1.0) - 0.5) / TextureSize;
+}
+
+
+COMPAT_PRECISION vec4 add_noise(in COMPAT_PRECISION vec4 color, in vec2 coord) {
+    COMPAT_PRECISION float frame = float(FrameCount) * 0.025 + 0.001;
+    COMPAT_PRECISION float distance = length(coord * 1.61803398875) + 0.001;
+    COMPAT_PRECISION float noise = fract(sin(distance * sin(frame)) * (coord.x + 1.0) * 43.758);
+
+    return clamp(color + (noise - 0.5) * (NOISE_INTENSITY * 0.03125), 0.0, 1.0);
 }
 
 
@@ -116,7 +133,10 @@ COMPAT_PRECISION vec4 draw_shadowmask(in COMPAT_PRECISION vec4 color, in vec2 co
 
 void main() {  // FRAGMENT
     vec2 scaled_uv = scale_antialias(TEX0.xy);
-    FragColor = draw_shadowmask(COMPAT_TEXTURE(Texture, scaled_uv), gl_FragCoord.xy);
+    COMPAT_PRECISION vec4 color = COMPAT_TEXTURE(Texture, scaled_uv);
+
+    color = add_noise(color, gl_FragCoord.xy);
+    FragColor = draw_shadowmask(color, gl_FragCoord.xy);
 }
 
 
