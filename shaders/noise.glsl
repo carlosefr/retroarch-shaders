@@ -1,5 +1,5 @@
 /*
- *  CRT noise over antialiased nearest-neighbor scaling.
+ *  CRT noise.
  *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the Free
@@ -10,7 +10,7 @@
  */
 
 
-#pragma parameter NOISE_INTENSITY "Noise Intensity" 2.0 0.0 3.0 0.05
+#pragma parameter NOISE_INTENSITY "Noise Intensity" 2.0 0.0 5.0 0.05
 
 
 #if defined(VERTEX)
@@ -38,7 +38,7 @@ uniform mat4 MVPMatrix;
 #ifdef PARAMETER_UNIFORM
     uniform COMPAT_PRECISION float NOISE_INTENSITY;
 #else
-    #define NOISE_INTENSITY 0.0
+    #define NOISE_INTENSITY 2.0
 #endif
 
 
@@ -72,33 +72,26 @@ void main() {  // VERTEX
 #endif
 
 uniform COMPAT_PRECISION int FrameCount;
-uniform COMPAT_PRECISION vec2 TextureSize;
 uniform sampler2D Texture;
 COMPAT_VARYING vec4 TEX0;
 
 #ifdef PARAMETER_UNIFORM
     uniform COMPAT_PRECISION float NOISE_INTENSITY;
+#else
+    #define NOISE_INTENSITY 2.0
 #endif
 
 
-vec2 scale_antialias(in vec2 uv) {
-    uv *= TextureSize;
-    return (floor(uv) + clamp(fract(uv) / fwidth(uv), 0.0, 1.0) - 0.5) / TextureSize;
-}
-
-
 COMPAT_PRECISION vec4 add_noise(in COMPAT_PRECISION vec4 color, in vec2 coord) {
-    COMPAT_PRECISION float frame = float(FrameCount) * 0.025 + 0.001;
-    COMPAT_PRECISION float distance = length(coord * 1.61803398875) + 0.001;
-    COMPAT_PRECISION float noise = fract(sin(distance * sin(frame)) * (coord.x + 1.0) * 43.758);
+    COMPAT_PRECISION float seed = length(coord) * 1.618 + float(FrameCount) * 0.025;
+    COMPAT_PRECISION float noise = fract(sin(seed) * coord.x);
 
     return clamp(color + (noise - 0.5) * (NOISE_INTENSITY * 0.03125), 0.0, 1.0);
 }
 
 
 void main() {  // FRAGMENT
-    vec2 scaled_uv = scale_antialias(TEX0.xy);
-    FragColor = add_noise(COMPAT_TEXTURE(Texture, scaled_uv), gl_FragCoord.xy);
+    FragColor = add_noise(COMPAT_TEXTURE(Texture, TEX0.xy), gl_FragCoord.xy);
 }
 
 

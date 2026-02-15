@@ -12,9 +12,11 @@
  */
 
 
-#pragma parameter MASK_INTENSITY "Shadow Mask Intensity"       0.3 0.0 3.0 0.05
-#pragma parameter MASK_TRINITRON "Aperture Grille (Trinitron)" 0.0 0.0 1.0 1.0
-#pragma parameter NOISE_INTENSITY "Noise Intensity"            2.0 0.0 3.0 0.05
+#pragma parameter MASK_INTENSITY "Shadow Mask Intensity" 0.3 0.0 2.0 0.05
+#pragma parameter MASK_WIDTH "Shadow Mask Width"         3.0 2.0 6.0 1.0
+#pragma parameter MASK_HEIGHT "Shadow Mask Height"       3.0 2.0 6.0 1.0
+#pragma parameter MASK_TRINITRON "Shadow Mask Trinitron" 0.0 0.0 1.0 1.0
+#pragma parameter NOISE_INTENSITY "Noise Intensity"      2.0 0.0 5.0 0.05
 
 
 #if defined(VERTEX)
@@ -44,12 +46,16 @@ uniform COMPAT_PRECISION vec2 OutputSize;
 
 #ifdef PARAMETER_UNIFORM
     uniform COMPAT_PRECISION float MASK_INTENSITY;
+    uniform COMPAT_PRECISION float MASK_WIDTH;
+    uniform COMPAT_PRECISION float MASK_HEIGHT;
     uniform COMPAT_PRECISION float MASK_TRINITRON;
     uniform COMPAT_PRECISION float NOISE_INTENSITY;
 #else
-    #define MASK_INTENSITY 0.0
+    #define MASK_INTENSITY 0.3
+    #define MASK_WIDTH 3.0
+    #define MASK_HEIGHT 3.0
     #define MASK_TRINITRON 0.0
-    #define NOISE_INTENSITY 0.0
+    #define NOISE_INTENSITY 2.0
 #endif
 
 
@@ -93,8 +99,16 @@ COMPAT_VARYING COMPAT_PRECISION float vMaskScale;  // pre-calculated (vertex)
 
 #ifdef PARAMETER_UNIFORM
     uniform COMPAT_PRECISION float MASK_INTENSITY;
+    uniform COMPAT_PRECISION float MASK_WIDTH;
+    uniform COMPAT_PRECISION float MASK_HEIGHT;
     uniform COMPAT_PRECISION float MASK_TRINITRON;
     uniform COMPAT_PRECISION float NOISE_INTENSITY;
+#else
+    #define MASK_INTENSITY 0.3
+    #define MASK_WIDTH 3.0
+    #define MASK_HEIGHT 3.0
+    #define MASK_TRINITRON 0.0
+    #define NOISE_INTENSITY 2.0
 #endif
 
 
@@ -105,22 +119,26 @@ vec2 scale_antialias(in vec2 uv) {
 
 
 COMPAT_PRECISION vec4 add_noise(in COMPAT_PRECISION vec4 color, in vec2 coord) {
-    COMPAT_PRECISION float frame = float(FrameCount) * 0.025 + 0.001;
-    COMPAT_PRECISION float distance = length(coord * 1.61803398875) + 0.001;
-    COMPAT_PRECISION float noise = fract(sin(distance * sin(frame)) * (coord.x + 1.0) * 43.758);
+    COMPAT_PRECISION float seed = length(coord) * 1.618 + float(FrameCount) * 0.025;
+    COMPAT_PRECISION float noise = fract(sin(seed) * coord.x);
 
     return clamp(color + (noise - 0.5) * (NOISE_INTENSITY * 0.03125), 0.0, 1.0);
 }
 
 
 COMPAT_PRECISION vec4 draw_shadowmask(in COMPAT_PRECISION vec4 color, in vec2 coord) {
-    // vertical lines (slotmask and trinitron)
-    COMPAT_PRECISION float v_mask = step(mod(floor(coord.x), 3.0), 0.5);
+    //
+    // On my old ATI Mobility Radeon HD 2600, when MASK_WIDTH/HEIGHT is a multiple of 3.0 the vertical/horizontal lines disappear!
+    // If MASK_WIDTH/HEIGHT is replaced by the constant 3.0, they appear! Adding 0.001 to the floor() calls solves this problem...
+    //
 
-    // staggered horizontal lines (slotmask only)
-    COMPAT_PRECISION float field = fract(coord.x / 6.0);
-    COMPAT_PRECISION float h_mask_a = step(0.166, field) * (1.0 - step(0.5, field)) * step(mod(floor(coord.y + 1.0), 3.0), 0.5);
-    COMPAT_PRECISION float h_mask_b = step(0.666, field) * step(mod(floor(coord.y), 3.0), 0.5);
+    // Vertical lines (for both slotmask and trinitron).
+    COMPAT_PRECISION float v_mask = step(mod(floor(coord.x) + 0.001, MASK_WIDTH), 0.5);
+
+    // Staggered horizontal lines (for slotmask only).
+    COMPAT_PRECISION float field = fract(coord.x / (MASK_WIDTH * 2.0));
+    COMPAT_PRECISION float h_mask_a = step(0.0, field) * (1.0 - step(0.5, field)) * step(mod(floor(coord.y + MASK_HEIGHT / 2.0) + 0.001, MASK_HEIGHT), 0.5);
+    COMPAT_PRECISION float h_mask_b = step(0.5, field) * step(mod(floor(coord.y) + 0.001, MASK_HEIGHT), 0.5);
     COMPAT_PRECISION float h_mask = (h_mask_a + h_mask_b) * (1.0 - MASK_TRINITRON);
 
     COMPAT_PRECISION vec4 mask_color = vec4(0.0, 0.0, 0.0, 0.5 * vMaskScale);
