@@ -91,7 +91,6 @@ void main() {  // VERTEX
 #endif
 
 uniform COMPAT_PRECISION int FrameCount;
-uniform COMPAT_PRECISION vec2 OutputSize;
 uniform COMPAT_PRECISION vec2 TextureSize;
 uniform sampler2D Texture;
 COMPAT_VARYING vec4 TEX0;

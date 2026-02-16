@@ -85,7 +85,6 @@ void main() {  // VERTEX
     #define COMPAT_PRECISION
 #endif
 
-uniform COMPAT_PRECISION vec2 OutputSize;
 uniform COMPAT_PRECISION vec2 TextureSize;
 uniform sampler2D Texture;
 COMPAT_VARYING vec4 TEX0;

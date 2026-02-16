@@ -1,10 +1,6 @@
-shaders = "1"
-shader0 = "shaders/sharp-shadowmask.glsl"
-filter_linear0 = "true"
-wrap_mode0 = "clamp_to_border"
-mipmap_input0 = "false"
-alias1 = ""
-float_framebuffer0 = "false"
-srgb_framebuffer0 = "false"
+shaders = 1
+shader0 = shaders/sharp-shadowmask.glsl
+filter_linear0 = true
+
 MASK_INTENSITY = "0.100000"
 MASK_TRINITRON = "0.000000"
