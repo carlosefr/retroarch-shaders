@@ -39,6 +39,7 @@ COMPAT_ATTRIBUTE vec4 VertexCoord;
 COMPAT_ATTRIBUTE vec4 TexCoord;
 COMPAT_VARYING vec4 TEX0;
 COMPAT_VARYING COMPAT_PRECISION float vMaskScale;
+COMPAT_VARYING COMPAT_PRECISION float vAspectRatio;
 
 uniform mat4 MVPMatrix;
 uniform COMPAT_PRECISION vec2 TextureSize;
@@ -64,6 +65,7 @@ void main() {  // VERTEX
     TEX0.xy = TexCoord.xy;
 
     vMaskScale = (OutputSize.x / TextureSize.y) * 0.25;
+    vAspectRatio = (OutputSize.x / OutputSize.y);
 }
 
 
@@ -94,7 +96,8 @@ uniform COMPAT_PRECISION int FrameCount;
 uniform COMPAT_PRECISION vec2 TextureSize;
 uniform sampler2D Texture;
 COMPAT_VARYING vec4 TEX0;
-COMPAT_VARYING COMPAT_PRECISION float vMaskScale;  // pre-calculated (vertex)
+COMPAT_VARYING COMPAT_PRECISION float vMaskScale;    // pre-calculated (vertex)
+COMPAT_VARYING COMPAT_PRECISION float vAspectRatio;  // pre-calculated (vertex)
 
 #ifdef PARAMETER_UNIFORM
     uniform COMPAT_PRECISION float MASK_INTENSITY;
@@ -131,13 +134,17 @@ COMPAT_PRECISION vec4 draw_shadowmask(in COMPAT_PRECISION vec4 color, in vec2 co
     // If MASK_WIDTH/HEIGHT is replaced by the constant 3.0, they appear! Adding 0.001 to the floor() calls solves this problem...
     //
 
+    // Rodate mask for vertical-oriented screens.
+    float v_coord = vAspectRatio > 1.0 ? coord.x : coord.y;
+    float h_coord = vAspectRatio > 1.0 ? coord.y : coord.x;
+
     // Vertical lines (for both slotmask and trinitron).
-    COMPAT_PRECISION float v_mask = step(mod(floor(coord.x) + 0.001, MASK_WIDTH), 0.5);
+    COMPAT_PRECISION float v_mask = step(mod(floor(v_coord) + 0.001, MASK_WIDTH), 0.5);
 
     // Staggered horizontal lines (for slotmask only).
-    COMPAT_PRECISION float field = fract(coord.x / (MASK_WIDTH * 2.0));
-    COMPAT_PRECISION float h_mask_a = step(0.0, field) * (1.0 - step(0.5, field)) * step(mod(floor(coord.y + MASK_HEIGHT / 2.0) + 0.001, MASK_HEIGHT), 0.5);
-    COMPAT_PRECISION float h_mask_b = step(0.5, field) * step(mod(floor(coord.y) + 0.001, MASK_HEIGHT), 0.5);
+    COMPAT_PRECISION float field = fract(v_coord / (MASK_WIDTH * 2.0));
+    COMPAT_PRECISION float h_mask_a = step(0.0, field) * (1.0 - step(0.5, field)) * step(mod(floor(h_coord + MASK_HEIGHT / 2.0) + 0.001, MASK_HEIGHT), 0.5);
+    COMPAT_PRECISION float h_mask_b = step(0.5, field) * step(mod(floor(h_coord) + 0.001, MASK_HEIGHT), 0.5);
     COMPAT_PRECISION float h_mask = (h_mask_a + h_mask_b) * (1.0 - MASK_TRINITRON);
 
     COMPAT_PRECISION vec4 mask_color = vec4(0.0, 0.0, 0.0, 0.5 * vMaskScale);
