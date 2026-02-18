@@ -2,4 +2,4 @@ shaders = 1
 shader0 = shaders/noise.glsl
 filter_linear0 = false
 
-NOISE_INTENSITY = "0.500000"
+NOISE_INTENSITY = "0.550000"

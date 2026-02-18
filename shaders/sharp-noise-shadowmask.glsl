@@ -17,6 +17,7 @@
 #pragma parameter MASK_HEIGHT "Shadow Mask Height"       3.0 2.0 6.0 1.0
 #pragma parameter MASK_TRINITRON "Shadow Mask Trinitron" 0.0 0.0 1.0 1.0
 #pragma parameter NOISE_INTENSITY "Noise Intensity"      2.0 0.0 5.0 0.05
+#pragma parameter NOISE_WEIGHTED "Noise Uniformity"      1.0 0.0 1.0 1.0
 
 
 #if defined(VERTEX)
@@ -40,6 +41,7 @@ COMPAT_ATTRIBUTE vec4 TexCoord;
 COMPAT_VARYING vec4 TEX0;
 COMPAT_VARYING COMPAT_PRECISION float vMaskScale;
 COMPAT_VARYING COMPAT_PRECISION float vAspectRatio;
+COMPAT_VARYING COMPAT_PRECISION vec4 vNoiseWeights;
 
 uniform mat4 MVPMatrix;
 uniform COMPAT_PRECISION vec2 TextureSize;
@@ -51,12 +53,14 @@ uniform COMPAT_PRECISION vec2 OutputSize;
     uniform COMPAT_PRECISION float MASK_HEIGHT;
     uniform COMPAT_PRECISION float MASK_TRINITRON;
     uniform COMPAT_PRECISION float NOISE_INTENSITY;
+    uniform COMPAT_PRECISION float NOISE_WEIGHTED;
 #else
     #define MASK_INTENSITY 0.3
     #define MASK_WIDTH 3.0
     #define MASK_HEIGHT 3.0
     #define MASK_TRINITRON 0.0
     #define NOISE_INTENSITY 2.0
+    #define NOISE_WEIGHTED 1.0
 #endif
 
 
@@ -66,6 +70,7 @@ void main() {  // VERTEX
 
     vMaskScale = (OutputSize.x / TextureSize.y) * 0.25;
     vAspectRatio = (OutputSize.x / OutputSize.y);
+    vNoiseWeights = (NOISE_INTENSITY * 0.03125) * mix(vec4(1.0), vec4(1.4, 1.0, 2.0, 1.0), NOISE_WEIGHTED);
 }
 
 
@@ -98,19 +103,18 @@ uniform sampler2D Texture;
 COMPAT_VARYING vec4 TEX0;
 COMPAT_VARYING COMPAT_PRECISION float vMaskScale;    // pre-calculated (vertex)
 COMPAT_VARYING COMPAT_PRECISION float vAspectRatio;  // pre-calculated (vertex)
+COMPAT_VARYING COMPAT_PRECISION vec4 vNoiseWeights;  // pre-calculated (vertex)
 
 #ifdef PARAMETER_UNIFORM
     uniform COMPAT_PRECISION float MASK_INTENSITY;
     uniform COMPAT_PRECISION float MASK_WIDTH;
     uniform COMPAT_PRECISION float MASK_HEIGHT;
     uniform COMPAT_PRECISION float MASK_TRINITRON;
-    uniform COMPAT_PRECISION float NOISE_INTENSITY;
 #else
     #define MASK_INTENSITY 0.3
     #define MASK_WIDTH 3.0
     #define MASK_HEIGHT 3.0
     #define MASK_TRINITRON 0.0
-    #define NOISE_INTENSITY 2.0
 #endif
 
 
@@ -124,7 +128,7 @@ COMPAT_PRECISION vec4 add_noise(in COMPAT_PRECISION vec4 color, in vec2 coord) {
     COMPAT_PRECISION float seed = length(coord) * 1.618 + float(FrameCount) * 0.025;
     COMPAT_PRECISION float noise = fract(sin(seed) * coord.x * coord.y);
 
-    return clamp(color + (noise - 0.5) * (NOISE_INTENSITY * 0.03125), 0.0, 1.0);
+    return clamp(color + (noise - 0.5) * vNoiseWeights, 0.0, 1.0);
 }
 
 
