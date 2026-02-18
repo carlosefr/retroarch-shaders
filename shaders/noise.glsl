@@ -84,7 +84,7 @@ COMPAT_VARYING vec4 TEX0;
 
 COMPAT_PRECISION vec4 add_noise(in COMPAT_PRECISION vec4 color, in vec2 coord) {
     COMPAT_PRECISION float seed = length(coord) * 1.618 + float(FrameCount) * 0.025;
-    COMPAT_PRECISION float noise = fract(sin(seed) * coord.x);
+    COMPAT_PRECISION float noise = fract(sin(seed) * coord.x * coord.y);
 
     return clamp(color + (noise - 0.5) * (NOISE_INTENSITY * 0.03125), 0.0, 1.0);
 }
