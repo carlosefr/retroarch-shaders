@@ -1,0 +1,10 @@
+shaders = 2
+feedback_pass = 0
+
+shader0 = ../blurs/shaders/gauss_4tap/gauss_2tap_h.glsl
+filter_linear0 = true
+shader1 = shaders/sharp-noise-shadowmask.glsl
+filter_linear1 = true
+
+SIGMA = "0.600000"
+NOISE_INTENSITY = "1.000001"
