@@ -7,4 +7,5 @@ shader1 = shaders/sharp-noise-shadowmask.glsl
 filter_linear1 = true
 
 SIGMA = "0.600000"
+MASK_INTENSITY = "0.250000"
 NOISE_INTENSITY = "1.000001"
