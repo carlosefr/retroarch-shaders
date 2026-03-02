@@ -1,0 +1,7 @@
+shaders = 2
+feedback_pass = 0
+shader0 = shaders/noise.glsl
+filter_linear0 = false
+shader1 = ../crt/shaders/crt-caligari.glsl
+filter_linear1 = false
+NOISE_INTENSITY = "0.250000"
