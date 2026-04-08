@@ -1,5 +1,15 @@
 /*
  * Combined sharp-bilinear scaling + simple color controls optimized for the Raspberry Pi VideoCore IV (e.g. Pi 3B).
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * This shader was based on:
+ *
+ *   - https://github.com/libretro/glsl-shaders/blob/master/interpolation/shaders/sharp-bilinear-simple.glsl
+ *   - https://github.com/libretro/glsl-shaders/blob/master/misc/shaders/simple_color_controls.glsl
  */
 
 #pragma parameter S_GAMMA_IN "Gamma In" 2.4 1.0 4.0 0.05
@@ -66,12 +76,12 @@ uniform COMPAT_PRECISION float S_TEMPERATURE;
 #else
 #define S_GAMMA_IN 2.4
 #define S_GAMMA_OUT 2.2
-#define S_BLACK 0.0
+#define S_BLACK 0.5
 #define S_BRIGHTNESS 1.0
 #define S_RED 1.0
 #define S_GREEN 1.0
 #define S_BLUE 1.0
-#define S_TEMPERATURE 0.0
+#define S_TEMPERATURE 1.0
 #endif
 
 
@@ -131,13 +141,11 @@ COMPAT_VARYING COMPAT_PRECISION vec3 vColorMult;
 #ifdef PARAMETER_UNIFORM
 uniform COMPAT_PRECISION float S_CONTRAST;
 uniform COMPAT_PRECISION float S_SATURATION;
-uniform COMPAT_PRECISION float S_BLACK;
 uniform COMPAT_PRECISION float S_BRIGHT_BOOST;
 uniform COMPAT_PRECISION float S_DARK_BOOST;
 #else
 #define S_CONTRAST 1.0
 #define S_SATURATION 1.0
-#define S_BLACK 0.0
 #define S_BRIGHT_BOOST 1.0
 #define S_DARK_BOOST 1.0
 #endif
