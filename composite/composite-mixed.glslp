@@ -1,8 +1,9 @@
 shaders = 2
-shader0 = ../../motionblur/shaders/mix_frames.glsl
+shader0 = ../../custom/shaders/mix-frames-pi.glsl
 filter_linear0 = false
 
 shader1 = ../../custom/shaders/composite-scale-pi.glsl
 filter_linear1 = true
 
 S_GAMMA_OUT = "2.400000"
+MIX_RATIO = "0.300000"
