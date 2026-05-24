@@ -6,6 +6,5 @@ filter_linear1 = true
 
 feedback_pass = 0
 g_in = 2.25
-lum = 0.15
-CURV = "0.000000"
-INTERL = "0.000000"
+CURVATURE = "0.000000"
+interlace_detect = "0.000000"
