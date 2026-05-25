@@ -13,7 +13,7 @@
  */
 
 #pragma parameter S_GAMMA_IN "Gamma In" 2.4 1.0 4.0 0.05
-#pragma parameter S_GAMMA_OUT "Gamma Out" 2.2 1.0 4.0 0.05
+#pragma parameter S_GAMMA_OUT "Gamma Out" 2.4 1.0 4.0 0.05
 #pragma parameter S_BRIGHTNESS "Brightness" 1.0 0.0 2.0 0.01
 #pragma parameter S_CONTRAST "Contrast" 1.0 0.00 2.00 0.01
 #pragma parameter S_BLACK "Black Level" 0.5 0.0 1.0 0.01
@@ -75,7 +75,7 @@ uniform COMPAT_PRECISION float S_BLUE;
 uniform COMPAT_PRECISION float S_TEMPERATURE;
 #else
 #define S_GAMMA_IN 2.4
-#define S_GAMMA_OUT 2.2
+#define S_GAMMA_OUT 2.4
 #define S_BLACK 0.5
 #define S_BRIGHTNESS 1.0
 #define S_RED 1.0
