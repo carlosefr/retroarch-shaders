@@ -1,0 +1,15 @@
+shaders = 2
+
+shader0 = shaders/horizontal-adaptive-blend.glsl
+filter_linear0 = false
+scale_type_x0 = source
+scale_x0 = 1.000000
+scale_type_y0 = source
+scale_y0 = 1.000000
+
+shader1 = ../crt/shaders/crt-easymode.glsl
+filter_linear1 = false
+
+SHARPNESS_H = "0.800000"
+MASK_STRENGTH = "0.400000"
+SCANLINE_STRENGTH = "0.500000"
