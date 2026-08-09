@@ -169,7 +169,7 @@ uniform COMPAT_PRECISION float DILATION;
 #endif
 
 // Set to 0 to use linear filter and gain speed
-#define ENABLE_LANCZOS 1
+#define ENABLE_LANCZOS 0
 
 vec4 dilate(vec4 col)
 {
