@@ -1,7 +1,7 @@
 shaders = 2
 shader0 = ../motionblur/shaders/mix_frames.glsl
 filter_linear0 = false
-shader1 = ../crt/shaders/crt-easymode.glsl
+shader1 = shaders/crt-easymode-fast.glsl
 filter_linear1 = false
 
 SHARPNESS_H = "0.800000"

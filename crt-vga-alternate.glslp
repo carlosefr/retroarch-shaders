@@ -1,7 +1,7 @@
 shaders = 2
 shader0 = ../interpolation/shaders/sharp-bilinear-simple.glsl
 filter_linear0 = true
-shader1 = ../crt/shaders/crt-easymode.glsl
+shader1 = shaders/crt-easymode-fast.glsl
 filter_linear1 = false
 
 MASK_STRENGTH = "0.250000"

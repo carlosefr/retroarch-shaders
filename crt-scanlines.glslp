@@ -3,7 +3,7 @@ shaders = 2
 shader0 = shaders/color-controls-pi.glsl
 filter_linear0 = false
 
-shader1 = ../crt/shaders/crt-easymode.glsl
+shader1 = shaders/crt-easymode-fast.glsl
 filter_linear1 = false
 
 S_BLACK = "0.560000"

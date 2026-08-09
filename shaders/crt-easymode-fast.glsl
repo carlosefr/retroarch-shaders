@@ -1,4 +1,6 @@
 /*
+    Modified "crt-easymode" for better performance on an ATI R600 (ATI Mobility HD2600) from 2008.
+
     CRT Shader by EasyMode
     License: GPL
 
@@ -53,8 +55,8 @@
 #define COMPAT_ATTRIBUTE in
 #define COMPAT_TEXTURE texture
 #else
-#define COMPAT_VARYING varying 
-#define COMPAT_ATTRIBUTE attribute 
+#define COMPAT_VARYING varying
+#define COMPAT_ATTRIBUTE attribute
 #define COMPAT_TEXTURE texture2D
 #endif
 
@@ -70,7 +72,7 @@ COMPAT_ATTRIBUTE vec4 TexCoord;
 COMPAT_VARYING vec4 COL0;
 COMPAT_VARYING vec4 TEX0;
 
-vec4 _oPosition1; 
+vec4 _oPosition1;
 uniform mat4 MVPMatrix;
 uniform COMPAT_PRECISION int FrameDirection;
 uniform COMPAT_PRECISION int FrameCount;
@@ -246,12 +248,12 @@ void main()
     float scan_beam   = clamp(bright * SCANLINE_BEAM_WIDTH_MAX, SCANLINE_BEAM_WIDTH_MIN, SCANLINE_BEAM_WIDTH_MAX);
     float scan_weight = 1.0 - pow(0.5 - 0.5 * cos(2.0 * PI * dist.y), scan_beam) * SCANLINE_STRENGTH;
 
-    float mask   = 1.0 - MASK_STRENGTH;    
+    float mask   = 1.0 - MASK_STRENGTH;
     vec2 mod_fac = floor(vTexCoord * outsize.xy * SourceSize.xy / (InputSize.xy * vec2(MASK_SIZE, MASK_DOT_HEIGHT * MASK_SIZE)));
     vec3 d = vec3(floor(mod((mod_fac.x + mod(mod_fac.y, 2.0) * MASK_STAGGER) / MASK_DOT_WIDTH, 3.0)));
     vec3 mask_weight = vec3(mask) + (1.0 - mask) * step(vec3(0.0, 1.0, 2.0), d) * step(d, vec3(0.0, 1.0, 2.0));
 
-    if (InputSize.y >= SCANLINE_CUTOFF) 
+    if (InputSize.y >= SCANLINE_CUTOFF)
         scan_weight = 1.0;
 
     col2 = col.rgb;
@@ -261,5 +263,5 @@ void main()
     col  = pow(col, vec3(1.0 / GAMMA_OUTPUT));
 
     FragColor = vec4(col * BRIGHT_BOOST, 1.0);
-} 
+}
 #endif
