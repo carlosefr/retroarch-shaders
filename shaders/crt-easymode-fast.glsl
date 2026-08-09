@@ -248,12 +248,8 @@ void main()
 
     float mask   = 1.0 - MASK_STRENGTH;    
     vec2 mod_fac = floor(vTexCoord * outsize.xy * SourceSize.xy / (InputSize.xy * vec2(MASK_SIZE, MASK_DOT_HEIGHT * MASK_SIZE)));
-    int dot_no   = int(mod((mod_fac.x + mod(mod_fac.y, 2.0) * MASK_STAGGER) / MASK_DOT_WIDTH, 3.0));
-    vec3 mask_weight;
-
-    if      (dot_no == 0) mask_weight = vec3(1.0,  mask, mask);
-    else if (dot_no == 1) mask_weight = vec3(mask, 1.0,  mask);
-    else                  mask_weight = vec3(mask, mask, 1.0);
+    vec3 d = vec3(floor(mod((mod_fac.x + mod(mod_fac.y, 2.0) * MASK_STAGGER) / MASK_DOT_WIDTH, 3.0)));
+    vec3 mask_weight = vec3(mask) + (1.0 - mask) * step(vec3(0.0, 1.0, 2.0), d) * step(d, vec3(0.0, 1.0, 2.0));
 
     if (InputSize.y >= SCANLINE_CUTOFF) 
         scan_weight = 1.0;
