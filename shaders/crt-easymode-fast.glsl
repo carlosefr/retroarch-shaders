@@ -244,7 +244,7 @@ void main()
     float bright      = (max(col.r, max(col.g, col.b)) + luma) * 0.5;
     float scan_bright = clamp(bright, SCANLINE_BRIGHT_MIN, SCANLINE_BRIGHT_MAX);
     float scan_beam   = clamp(bright * SCANLINE_BEAM_WIDTH_MAX, SCANLINE_BEAM_WIDTH_MIN, SCANLINE_BEAM_WIDTH_MAX);
-    float scan_weight = 1.0 - pow(cos(vTexCoord.y * 2.0 * PI * SourceSize.y) * 0.5 + 0.5, scan_beam) * SCANLINE_STRENGTH;
+    float scan_weight = 1.0 - pow(0.5 - 0.5 * cos(2.0 * PI * dist.y), scan_beam) * SCANLINE_STRENGTH;
 
     float mask   = 1.0 - MASK_STRENGTH;    
     vec2 mod_fac = floor(vTexCoord * outsize.xy * SourceSize.xy / (InputSize.xy * vec2(MASK_SIZE, MASK_DOT_HEIGHT * MASK_SIZE)));
