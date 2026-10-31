@@ -1,5 +1,5 @@
 shaders = 2
-shader0 = ../motionblur/shaders/mix_frames.glsl
+shader0 = shaders/mix-frames-pi.glsl
 filter_linear0 = false
 shader1 = shaders/crt-easymode-fast.glsl
 filter_linear1 = false
