@@ -12,8 +12,8 @@
  */
 
 
-#pragma parameter MIX_RATIO "Mix Ratio" 0.5 0.0 0.5 0.01
-#pragma parameter LUMA_RESPONSE "Mix Luma Response" 0.01 0.01 2.0 0.01
+#pragma parameter MIX_RATIO "Mix Ratio" 0.5 0.0 0.5 0.05
+#pragma parameter LUMA_RESPONSE "Mix Luma Response" 0.0 0.0 2.0 0.05
 
 #if defined(VERTEX)
 
@@ -75,7 +75,7 @@ uniform COMPAT_PRECISION float MIX_RATIO;
 uniform COMPAT_PRECISION float LUMA_RESPONSE;
 #else
 #define MIX_RATIO 0.5
-#define LUMA_RESPONSE 0.01
+#define LUMA_RESPONSE 0.0
 #endif
 
 
@@ -86,8 +86,9 @@ void main()
 
     const vec3 lumaWeights = vec3(0.299, 0.587, 0.114);
     float lumaContrast = abs(dot(curr - prev, lumaWeights));
+    float lumaBlend = LUMA_RESPONSE >= 0.01 ? pow(lumaContrast, LUMA_RESPONSE) : 1.0;
 
-    FragColor = vec4(mix(curr, prev, MIX_RATIO * pow(lumaContrast, LUMA_RESPONSE)), 1.0);
+    FragColor = vec4(mix(curr, prev, MIX_RATIO * lumaBlend), 1.0);
 }
 
 
